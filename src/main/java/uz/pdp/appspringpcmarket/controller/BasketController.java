@@ -1,6 +1,7 @@
 package uz.pdp.appspringpcmarket.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.appspringpcmarket.entity.Basket;
 import uz.pdp.appspringpcmarket.payload.ApiResponse;
@@ -25,6 +26,7 @@ public class BasketController {
         return ResponseEntity.status(basketResponse.isSuccess()?201:409).body(basketResponse);
     }
 
+    @PreAuthorize(value = "hasAnyRole('SUPER_ADMIN', 'OPERATOR')")
     @GetMapping
     public ResponseEntity<?> getAllBaskets(){
         List<Basket> allBaskets = basketService.getAllBaskets();
@@ -49,6 +51,7 @@ public class BasketController {
         return ResponseEntity.status(apiResponse.isSuccess()?201:409).body(apiResponse);
     }
 
+    @PreAuthorize(value = "hasAnyRole('SUPER_ADMIN', 'OPERATOR')")
     @DeleteMapping("/{basketId}")
     public ResponseEntity<?> deleteBasket(@PathVariable Integer basketId){
         ApiResponse apiResponse = basketService.deleteBasket(basketId);
